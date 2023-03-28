@@ -1,0 +1,34 @@
+<h1 align="center">Hi 👋, I'm Boris Ivanov</h1>
+<h3 align="center">A Cyber Security and Forensics student in Edinburgh Napier University</h3>
+
+<h1 align="center"> Chrome Specter Tool
+The Chrome Specter Tool is a Python-based tool that allows you to extract sensitive information from Google Chrome's local storage, including passwords, cookies, and credit card information. The tool is designed to run on Windows machines and is compatible with Python 3.
+
+Features
+The Chrome Specter Tool offers the following features:
+
+Extract Chrome login data, including usernames and passwords
+Extract Chrome cookies
+Extract Chrome credit card information
+Extract Chrome browsing history
+Extract Chrome phone numbers
+Extract Chrome extensions
+Generate an XLSX report of extracted data
+Installation
+To install the Chrome Specter Tool, follow these steps:
+
+Clone the GitHub repository or download the ZIP file.
+Navigate to the root directory of the tool in the command line.
+Install the required Python packages using the following command: pip install -r requirements.txt
+Usage
+To use the Chrome Specter Tool, follow these steps:
+
+Open the command line and navigate to the root directory of the tool.
+Run the main.py script using the following command: python main.py
+Follow the prompts to extract and generate a report of the desired data.
+Note
+The Chrome Specter Tool is designed for educational and research purposes only. 
+It should not be used for any illegal activities or for malicious purposes.
+The tool is not intended to be a comprehensive or foolproof security tool and should not be relied upon as such.
+The tool is provided "as is" and without any warranty or guarantee of any kind. The creators of the tool are not responsible for any misuse of the tool or any damages
+that may result from its use.
