@@ -88,16 +88,32 @@ del df_cookies["last_access_utc"]
 del df_cookies["last_update_utc"]
 del df_cookies["encrypted_value"]
 
-#extract extension information
+extensions = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Extensions")
+
 df_ext = pd.DataFrame(columns=['ID', 'Name', 'Version'])
-for filename in os.listdir(extensions):
-    if filename.endswith('.json'):
-        with open(os.path.join(extensions, filename)) as f:
-            data = json.load(f)
-            ext_id = data['id']
-            ext_name = data['name']
-            ext_version = data['version']
-            df_ext = df_ext.append({'ID': ext_id, 'Name': ext_name, 'Version': ext_version}, ignore_index=True)
+for ext_id in os.listdir(extensions):
+    ext_path = os.path.join(extensions, ext_id)
+    if os.path.isdir(ext_path):
+        for version in os.listdir(ext_path):
+            manifest_path = os.path.join(ext_path, version, 'manifest.json')
+            if os.path.exists(manifest_path):
+                with open(manifest_path) as f:
+                    data = json.load(f)
+                    ext_name = data['name']
+                    ext_version = data['version']
+
+                    new_row = pd.DataFrame({'ID': [ext_id], 'Name': [ext_name], 'Version': [ext_version]})
+                    df_ext = pd.concat([df_ext, new_row], ignore_index=True)
+# #extract extension information
+# df_ext = pd.DataFrame(columns=['ID', 'Name', 'Version'])
+# for filename in os.listdir(extensions):
+#     if filename.endswith('.json'):
+#         with open(os.path.join(extensions, filename)) as f:
+#             data = json.load(f)
+#             ext_id = data['id']
+#             ext_name = data['name']
+#             ext_version = data['version']
+#             df_ext = df_ext.append({'ID': ext_id, 'Name': ext_name, 'Version': ext_version}, ignore_index=True)
 
 # Create the Excel file
 now = datetime.datetime.now()
