@@ -28,6 +28,7 @@ user_selection = menuSystem()
 
 # Set variables
 root_dir = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Default")
+extensions_dir = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Extensions")
 
 history = os.path.join(root_dir, "History")
 logins = os.path.join(root_dir, "Login Data")
@@ -72,6 +73,8 @@ df_phone = pd.read_sql(selectPhone, c_phone)
 c_card = sqlite3.connect(creditCards)
 df_card = pd.read_sql(selectCard, c_card)
 df_card["decoded_card_number"] = df_card["card_number_encrypted"].apply(decrypt_password, key=get_encryption_key())
+df_card["date_used"] = df_card["use_date"].apply(humanTime)
+del df_card["use_date"]
 del df_card["card_number_encrypted"]
 
 #extract cookie information
@@ -88,11 +91,11 @@ del df_cookies["last_access_utc"]
 del df_cookies["last_update_utc"]
 del df_cookies["encrypted_value"]
 
-extensions = os.path.join(os.environ["USERPROFILE"], "AppData", "Local", "Google", "Chrome", "User Data", "Default", "Extensions")
 
+#extarct extensions information
 df_ext = pd.DataFrame(columns=['ID', 'Name', 'Version'])
-for ext_id in os.listdir(extensions):
-    ext_path = os.path.join(extensions, ext_id)
+for ext_id in os.listdir(extensions_dir):
+    ext_path = os.path.join(extensions_dir, ext_id)
     if os.path.isdir(ext_path):
         for version in os.listdir(ext_path):
             manifest_path = os.path.join(ext_path, version, 'manifest.json')
@@ -104,16 +107,6 @@ for ext_id in os.listdir(extensions):
 
                     new_row = pd.DataFrame({'ID': [ext_id], 'Name': [ext_name], 'Version': [ext_version]})
                     df_ext = pd.concat([df_ext, new_row], ignore_index=True)
-# #extract extension information
-# df_ext = pd.DataFrame(columns=['ID', 'Name', 'Version'])
-# for filename in os.listdir(extensions):
-#     if filename.endswith('.json'):
-#         with open(os.path.join(extensions, filename)) as f:
-#             data = json.load(f)
-#             ext_id = data['id']
-#             ext_name = data['name']
-#             ext_version = data['version']
-#             df_ext = df_ext.append({'ID': ext_id, 'Name': ext_name, 'Version': ext_version}, ignore_index=True)
 
 # Create the Excel file
 now = datetime.datetime.now()
